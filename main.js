@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
         if (data['flag'] === null) {
              drawVideo(data['permalink']);
         }
-        if (data['close'] === null) {
+        if (data[0] === "close") {
             closeClient(data[1]);
         }
     };
