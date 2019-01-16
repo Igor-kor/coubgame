@@ -10,8 +10,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
         document.getElementById("btncall").onclick = function (event) {
             socket.send("call");
         };
-        console.log(document.getElementsByTagName("body"));
-        document.getElementsByTagName("body")[0].classList.remove("disconnect");
+        document.getElementById("btns").classList.remove("srverror");
     };
 
     socket.onclose = function (event) {
@@ -21,28 +20,28 @@ document.addEventListener("DOMContentLoaded", function (event) {
             console.log('Обрыв соединения'); // например, "убит" процесс сервера
         }
         console.log('Код: ' + event.code + ' причина: ' + event.reason);
-        document.getElementsByTagName("body")[0].classList.add("disconnect");
+        document.getElementById("btns").classList.add("srverror");
     };
 
     socket.onmessage = function (event) {
-        console.log(event.data);
         var data = JSON.parse(event.data) ;
         if (data[0] === "NewPlayer") {
-            drawPlayer(data[1]);
-            document.getElementById("btnnewplayer").remove();
+            document.getElementById("btns").classList.add("playerready");
+            document.getElementById("btns").classList.remove("newplayer");
+            document.getElementById("btncall").innerText = data[1];
         }
         if (data[0] === "call") {
-            drawPlayerCall(data[1]);
+            document.getElementById("btns").classList.add("callplayer");
         }
         if (data[0] === "clear") {
-            clearCall();
+            document.getElementById("btns").classList.remove("callplayer");
         }
     };
 
     socket.onerror = function (error) {
         console.log("Ошибка " + error.message);
+        document.getElementById("btns").classList.add("srverror");
     };
-
 
 });
 

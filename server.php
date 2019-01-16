@@ -7,6 +7,7 @@
  */
 
 require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/settings.php';
 use Workerman\Worker;
 use Clients\Clients;
 
@@ -32,7 +33,7 @@ $index = null;
 global $callplayer;
 $callplayer = 0;
 // Create a Websocket server
-$ws_worker = new Worker("websocket://srv0.site:2346");
+$ws_worker = new Worker("websocket://".$HOSTNAME);
 
 // 4 processes
 $ws_worker->count = 4;
@@ -55,16 +56,22 @@ $ws_worker->onMessage = function($connection, $data)
     }
     if($data == "NewPlayer"){
         //todo there bug
-        $GLOBALS['index']->connection->send(json_encode(array("NewPlayer" , $client->id)));
+        if(!empty($GLOBALS['index'])){
+            $GLOBALS['index']->connection->send(json_encode(array("NewPlayer" , $client->id)));
+        }
         $connection->send(json_encode(array("NewPlayer" , $client->id)));
     }
     if($data == "getVideo"){
-        $GLOBALS['index']->connection->send(getVideo());
+        if(!empty($GLOBALS['index'])) {
+            $GLOBALS['index']->connection->send(getVideo());
+        }
     }
     if($data == "call"){
         if( $GLOBALS['callplayer'] == 0){
             $GLOBALS['callplayer'] = $client->id;
-            $GLOBALS['index']->connection->send(json_encode(array("call" , $client->id)));
+            if(!empty($GLOBALS['index'])) {
+                $GLOBALS['index']->connection->send(json_encode(array("call", $client->id)));
+            }
             $connection->send(json_encode(array("call" , $client->id)));
         }
     }
@@ -80,7 +87,9 @@ $ws_worker->onMessage = function($connection, $data)
 $ws_worker->onClose = function($connection)
 {
     $client = Clients::getByConnection($connection, $GLOBALS['clients']);
-    $GLOBALS['index']->connection->send(json_encode(array("close" , $client->id)));
+    if(!empty($GLOBALS['index'])) {
+        $GLOBALS['index']->connection->send(json_encode(array("close", $client->id)));
+    }
     echo "Connection closed\n";
 };
 

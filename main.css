@@ -1,34 +1,34 @@
-html{
+html, body , #btns{
+    margin:0;
+    padding:0;
     height: 100%;
     width: 100%;
 }
-
 body{
     text-align: center;
-    height: auto;
 }
 
 .player{
     display: inline-block;
-    background-color: #0b9ddd;
+    background-color: #69cbdd;
     width: 100px;
     height: 100px;
     text-align: center;
 }
 
-.players{
-
-}
-
 .call{
-    background-color: crimson;
+    background-color: #21dc03;
 }
 
 #btncall, #btnnewplayer{
-    width: 100px;
-    height: 100px;
-
+    margin:0;
+    padding:0;
+    height: 100%;
+    width: 100%;
+    background-color: #69cbdd;
+    font-size: xx-large;
 }
+
 #btngetvideo {
     height: 100px;
     z-index: 1000;
@@ -48,4 +48,21 @@ iframe, #video{
 
 .disconnect{
     background-color: crimson;
+}
+
+
+.newplayer > #btncall{
+    display: none;
+}
+
+.playerready > #btnnewplayer{
+    display: none;
+}
+
+.srverror > #btncall, .srverror >#btnnewplayer{
+    background-color: crimson;
+}
+
+.callplayer > #btncall{
+    background-color: #21dc03;
 }
