@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function (event) {
 
-    var socket = new WebSocket("ws://192.168.137.1:2346");
+    var socket = new WebSocket("ws://"+window.location.hostname +":2346");
 
     socket.onopen = function () {
         console.log("Соединение установлено.");
