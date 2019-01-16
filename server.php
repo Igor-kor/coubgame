@@ -14,10 +14,7 @@ function getVideo(){
     static $page = 1 ;
     $response =  file_get_contents("https://coub.com/api/v2/search/coubs?q=anime&order_by=newest_popular&page=".$page."&per_page=1");
     $page++;
-//    var_dump(json_decode($response));
     return json_encode(json_decode($response)->coubs[0]);
-//    $response =  file_get_contents("https://coub.com/api/v2/coubs/1k58ru");
-//    return $response;
 }
 
 global $clients;
@@ -52,7 +49,6 @@ $ws_worker->onMessage = function($connection, $data)
         $GLOBALS['index']->connection->send(json_encode(array("NewPlayer" , $client->id)));
         $connection->send(json_encode(array("NewPlayer" , $client->id)));
     }
-
     if($data == "getVideo"){
         $GLOBALS['index']->connection->send(getVideo());
     }
@@ -62,8 +58,6 @@ $ws_worker->onMessage = function($connection, $data)
             $GLOBALS['index']->connection->send(json_encode(array("call" , $client->id)));
             $connection->send(json_encode(array("call" , $client->id)));
         }
-
-
     }
     if($data == "clearCall"){
         foreach ($GLOBALS['clients'] as $item){
@@ -71,12 +65,13 @@ $ws_worker->onMessage = function($connection, $data)
         }
         $GLOBALS['callplayer'] = 0;
     }
-
 };
 
 // Emitted when connection closed
 $ws_worker->onClose = function($connection)
 {
+    $client = Clients::getByConnection($connection, $GLOBALS['clients']);
+    $GLOBALS['index']->connection->send(json_encode(array("close" , $client->id)));
     echo "Connection closed\n";
 };
 

@@ -22,7 +22,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
     };
 
     socket.onmessage = function (event) {
-        // console.log("Получены данные " + event.data);
         var data = JSON.parse(event.data) ;
         if (data[0] === "NewPlayer") {
             drawPlayer(data[1]);
@@ -31,9 +30,10 @@ document.addEventListener("DOMContentLoaded", function (event) {
             hostdrawPlayerCall(data[1]);
         }
         if (data['flag'] === null) {
-            // console.log(data);
              drawVideo(data['permalink']);
-             // drawVideo(data['channel']['id']);
+        }
+        if (data['close'] === null) {
+            closeClient(data[1]);
         }
     };
 

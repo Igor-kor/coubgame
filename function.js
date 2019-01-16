@@ -29,3 +29,8 @@ function drawVideo(idvideo) {
     // var myCoub = document.getElementById('coubVideo').contentWindow;
     // myCoub.postMessage('play', idvideo);
 }
+
+function closeClient(IdPlayer){
+    var player = document.getElementById('player-' + IdPlayer);
+    player.remove();
+}
