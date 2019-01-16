@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
         document.getElementById("btncall").onclick = function (event) {
             socket.send("call");
         };
+        console.log(document.getElementsByName("body"));
         document.getElementsByName("body")[0].classList.remove("disconnect");
     };
 
