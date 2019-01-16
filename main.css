@@ -45,3 +45,7 @@ iframe, #video{
     height: 480px;
     z-index: 1;
 }
+
+.disconnect{
+    background-color: crimson;
+}

@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
         document.getElementById("btncall").onclick = function (event) {
             socket.send("call");
         };
+        document.getElementsByName("body")[0].classList.remove("disconnect");
     };
 
     socket.onclose = function (event) {
@@ -19,6 +20,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
             console.log('Обрыв соединения'); // например, "убит" процесс сервера
         }
         console.log('Код: ' + event.code + ' причина: ' + event.reason);
+        document.getElementsByName("body")[0].classList.add("disconnect");
     };
 
     socket.onmessage = function (event) {
