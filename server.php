@@ -12,7 +12,15 @@ use Clients\Clients;
 
 function getVideo(){
     static $page = 1 ;
-    $response =  file_get_contents("https://coub.com/api/v2/search/coubs?q=anime&order_by=newest_popular&page=".$page."&per_page=1");
+    static $total = 0;
+    if($total == 0){
+        $response =  file_get_contents("https://coub.com/api/v2/search/coubs?q=anime&order_by=newest_popular&page=".$page."&per_page=1");
+        $total = $response['total_pages'] ;
+    }
+    else{
+        $response =  file_get_contents("https://coub.com/api/v2/search/coubs?q=anime&order_by=newest_popular&page=".rand(1,$total)."&per_page=1");
+        $total = $response['total_pages'] ;
+    }
     $page++;
     return json_encode(json_decode($response)->coubs[0]);
 }
@@ -46,6 +54,7 @@ $ws_worker->onMessage = function($connection, $data)
         $client->client = false;
     }
     if($data == "NewPlayer"){
+        //todo there bug
         $GLOBALS['index']->connection->send(json_encode(array("NewPlayer" , $client->id)));
         $connection->send(json_encode(array("NewPlayer" , $client->id)));
     }
