@@ -10,8 +10,8 @@ document.addEventListener("DOMContentLoaded", function (event) {
         document.getElementById("btncall").onclick = function (event) {
             socket.send("call");
         };
-        console.log(document.getElementsByName("body"));
-        document.getElementsByName("body")[0].classList.remove("disconnect");
+        console.log(document.getElementsByTagName("body"));
+        document.getElementsByTagName("body")[0].classList.remove("disconnect");
     };
 
     socket.onclose = function (event) {
@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
             console.log('Обрыв соединения'); // например, "убит" процесс сервера
         }
         console.log('Код: ' + event.code + ' причина: ' + event.reason);
-        document.getElementsByName("body")[0].classList.add("disconnect");
+        document.getElementsByTagName("body")[0].classList.add("disconnect");
     };
 
     socket.onmessage = function (event) {
