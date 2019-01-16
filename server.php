@@ -21,13 +21,13 @@ function getVideo(){
 }
 
 global $clients;
-$clients = [];
+$clients = array();
 global $index;
 $index = null;
 global $callplayer;
 $callplayer = 0;
 // Create a Websocket server
-$ws_worker = new Worker("websocket://127.0.0.1:2346");
+$ws_worker = new Worker("websocket://srv0.site:2346");
 
 // 4 processes
 $ws_worker->count = 4;
@@ -43,13 +43,14 @@ $ws_worker->onConnect = function($connection)
 $ws_worker->onMessage = function($connection, $data)
 {
     $client = Clients::getByConnection($connection, $GLOBALS['clients']);
+    echo $data;
     if($data == "imindex"){
         $GLOBALS['index'] = $client;
         $client->client = false;
     }
     if($data == "NewPlayer"){
-        $GLOBALS['index']->connection->send(json_encode(["NewPlayer" , $client->id]));
-        $connection->send(json_encode(["NewPlayer" , $client->id]));
+        $GLOBALS['index']->connection->send(json_encode(array("NewPlayer" , $client->id)));
+        $connection->send(json_encode(array("NewPlayer" , $client->id)));
     }
 
     if($data == "getVideo"){
@@ -58,15 +59,15 @@ $ws_worker->onMessage = function($connection, $data)
     if($data == "call"){
         if( $GLOBALS['callplayer'] == 0){
             $GLOBALS['callplayer'] = $client->id;
-        $GLOBALS['index']->connection->send(json_encode(["call" , $client->id]));
-        $connection->send(json_encode(["call" , $client->id]));
+            $GLOBALS['index']->connection->send(json_encode(array("call" , $client->id)));
+            $connection->send(json_encode(array("call" , $client->id)));
         }
 
 
     }
     if($data == "clearCall"){
         foreach ($GLOBALS['clients'] as $item){
-            $item->connection->send(json_encode(["clear"]));
+            $item->connection->send(json_encode(array("clear","null")));
         }
         $GLOBALS['callplayer'] = 0;
     }

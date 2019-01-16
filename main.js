@@ -5,10 +5,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
     socket.onopen = function () {
         console.log("Соединение установлено.");
         socket.send("imindex");
-        document.getElementById("btnclearcall").onclick = function (event) {
-            socket.send("clearCall");
-            clearCall();
-        };
         document.getElementById("btngetvideo").onclick = function (event) {
             socket.send("getVideo");
             socket.send("clearCall");
