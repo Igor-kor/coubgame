@@ -1,0 +1,47 @@
+html{
+    height: 100%;
+    width: 100%;
+}
+
+body{
+    text-align: center;
+    height: auto;
+}
+
+.player{
+    display: inline-block;
+    background-color: #0b9ddd;
+    width: 100px;
+    height: 100px;
+    text-align: center;
+}
+
+.players{
+
+}
+
+.call{
+    background-color: crimson;
+}
+
+#btncall, #btnnewplayer{
+    width: 100px;
+    height: 100px;
+
+}
+#btngetvideo {
+    height: 100px;
+    z-index: 1000;
+    display: inline-block;
+}
+
+iframe, #video{
+    padding: 0 0 0 0;
+    margin: 0 0 0 0 ;
+}
+
+#video{
+    width: 800px;
+    height: 480px;
+    z-index: 1;
+}
