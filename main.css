@@ -14,6 +14,17 @@ body{
     width: 100px;
     height: 100px;
     text-align: center;
+    margin: auto;
+}
+
+.players div:first-child{
+    border-bottom-left-radius: 10px;
+    border-top-left-radius: 10px;
+}
+
+.players div:last-child{
+    border-bottom-right-radius: 10px;
+    border-top-right-radius: 10px;
 }
 
 .call{
@@ -32,8 +43,27 @@ body{
 #btngetvideo {
     height: 100px;
     z-index: 1000;
-    display: inline-block;
+    display: block;
+    position: absolute;
+    right: 0px;
+    background-color: lightgreen;
+    font-size: xx-large;
+    border: 0;
+    border-radius: 10px;
 }
+
+#btngetvideo:hover{
+    border: 0;
+    background-color: rgba(0, 226, 0, 0.69);
+}
+
+#btngetvideo:active{
+    border: 0;
+    background-color: rgba(54, 135, 52, 0.69);
+}
+
+
+
 
 iframe, #video{
     padding: 0 0 0 0;
@@ -44,6 +74,7 @@ iframe, #video{
     width: 800px;
     height: 480px;
     z-index: 1;
+    margin: auto;
 }
 
 .disconnect{
