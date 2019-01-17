@@ -82,7 +82,8 @@ $ws_worker->onMessage = function($connection, $data)
     }
 
     if($data == "stopsrv"){
-      die(0);
+        shell_exec("php server.php stop");
+        die(0);
     }
 };
 
