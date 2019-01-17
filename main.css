@@ -6,6 +6,8 @@ html, body , #btns{
 }
 body{
     text-align: center;
+    background: url(https://jutsu-cdn.ru/chakranature/background_anime_jojo-bizarre-adventure.jpg) top fixed no-repeat;
+    background-size: auto;
 }
 
 .player{
@@ -62,9 +64,6 @@ body{
     background-color: rgba(54, 135, 52, 0.69);
 }
 
-
-
-
 iframe, #video{
     padding: 0 0 0 0;
     margin: 0 0 0 0 ;
@@ -76,11 +75,6 @@ iframe, #video{
     z-index: 1;
     margin: auto;
 }
-
-.disconnect{
-    background-color: crimson;
-}
-
 
 .newplayer > #btncall{
     display: none;
@@ -96,4 +90,8 @@ iframe, #video{
 
 .callplayer > #btncall{
     background-color: #21dc03;
+}
+
+.disconnect{
+    background-color: crimson !important;
 }

@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
             socket.send("clearCall");
             clearCall();
         };
-        document.getElementsByTagName("body")[0].classList.remove("disconnect");
+        document.getElementById("btngetvideo").classList.remove("disconnect");
     };
 
     socket.onclose = function (event) {
@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
             console.log('Обрыв соединения'); // например, "убит" процесс сервера
         }
         console.log('Код: ' + event.code + ' причина: ' + event.reason);
-        document.getElementsByTagName("body")[0].classList.add("disconnect");
+        document.getElementById("btngetvideo").classList.add("disconnect");
     };
 
     socket.onmessage = function (event) {
