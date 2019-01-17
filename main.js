@@ -3,7 +3,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
     var socket = new WebSocket("ws://"+window.location.hostname +":2346");
 
     socket.onopen = function () {
-        console.log("Соединение установлено.");
         socket.send("imindex");
         document.getElementById("btngetvideo").onclick = function (event) {
             socket.send("getVideo");
@@ -24,7 +23,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
     };
 
     socket.onmessage = function (event) {
-        console.log(event.data);
         var data = JSON.parse(event.data) ;
         if (data[0] === "NewPlayer") {
             drawPlayer(data[1]);

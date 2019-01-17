@@ -2,7 +2,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
     var socket = new WebSocket("ws://"+window.location.hostname +":2346");
 
     socket.onopen = function () {
-        console.log("Соединение установлено.");
         document.getElementById("btnnewplayer").onclick = function (event) {
             socket.send("NewPlayer");
         };

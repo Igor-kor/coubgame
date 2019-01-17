@@ -50,13 +50,11 @@ $ws_worker->onConnect = function($connection)
 $ws_worker->onMessage = function($connection, $data)
 {
     $client = Clients::getByConnection($connection, $GLOBALS['clients']);
-    echo $data;
     if($data == "imindex"){
         $GLOBALS['index'] = $client;
         $client->client = false;
     }
     if($data == "NewPlayer"){
-        //todo there bug
         if(!empty($GLOBALS['index'])){
             $GLOBALS['index']->connection->send(json_encode(array("NewPlayer" , $client->id)));
         }
