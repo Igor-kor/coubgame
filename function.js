@@ -18,18 +18,21 @@ function hostdrawPlayerCall(IdPlayer) {
 
 function clearCall() {
     var players = document.getElementsByClassName('player');
-    Array.prototype.forEach.call(players,function(item, i, arr) {
+    Array.prototype.forEach.call(players, function (item, i, arr) {
         item.classList.remove("call");
     });
 }
 
 function drawVideo(idvideo) {
-    var video = document.getElementById('video');
-    video.innerHTML = "<iframe id=\"coubVideo\" src=\"http://coub.com/embed/"+idvideo+"?muted=false&autostart=true&originalSize=false&hideTopBar=true&startWithHD=false\" allowfullscreen=\"true\" frameborder=\"0\" width=\"800\" height=\"480\"></iframe>";
-    document.getElementById('coubVideo').contentWindow.postMessage('play', '*');
+    var video = document.getElementById('coubVideo');
+    video.src = "http://coub.com/embed/" + idvideo + "?muted=false&autostart=true&originalSize=false&hideTopBar=true&startWithHD=false" ;
+    video.addEventListener('load', function () {
+        document.getElementById('coubVideo').contentWindow.postMessage('play', '*');
+    });
+
 }
 
-function closeClient(IdPlayer){
+function closeClient(IdPlayer) {
     var player = document.getElementById('player-' + IdPlayer);
     player.remove();
 }
