@@ -9,7 +9,17 @@ document.addEventListener("DOMContentLoaded", function (event) {
             socket.send("clearCall");
             clearCall();
         };
+        document.getElementById("btnstopsrv").onclick = function (event) {
+            socket.send("stopsrv");
+        };
         document.getElementById("btngetvideo").classList.remove("disconnect");
+    };
+    document.getElementById("btnstartsrv").onclick = function (event) {
+        var xhr = new XMLHttpRequest();
+        console.log(window.location);
+        xhr.open('GET', window.location.href+'?start=1', true);
+        xhr.send();
+        window.location.reload();
     };
 
     socket.onclose = function (event) {

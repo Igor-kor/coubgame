@@ -95,3 +95,19 @@ iframe, #video{
 .disconnect{
     background-color: crimson !important;
 }
+
+.srvbtn{
+    z-index: 1000;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+
+.srvbtn > input{
+    z-index: 1000;
+    display: inline-block;
+    background-color: lightgreen;
+    font-size: xx-large;
+    border: 0;
+    border-radius: 10px;
+}

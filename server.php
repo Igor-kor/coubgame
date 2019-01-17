@@ -80,6 +80,10 @@ $ws_worker->onMessage = function($connection, $data)
         }
         $GLOBALS['callplayer'] = 0;
     }
+
+    if($data == "stopsrv"){
+      die(0);
+    }
 };
 
 // Emitted when connection closed
