@@ -26,8 +26,7 @@ function clearCall() {
 function drawVideo(idvideo) {
     var video = document.getElementById('video');
     video.innerHTML = "<iframe id=\"coubVideo\" src=\"http://coub.com/embed/"+idvideo+"?muted=false&autostart=true&originalSize=false&hideTopBar=true&startWithHD=false\" allowfullscreen=\"true\" frameborder=\"0\" width=\"800\" height=\"480\"></iframe>";
-    var myCoub = document.getElementById('coubVideo').contentWindow;
-    myCoub.postMessage('play', idvideo);
+    document.getElementById('coubVideo').contentWindow.postMessage('play', '*');
 }
 
 function closeClient(IdPlayer){
