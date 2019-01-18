@@ -28,7 +28,7 @@ function getVideo($question = "anime")
         $response = file_get_contents("https://coub.com/api/v2/search/coubs?q=" . urlencode($question) . "&order_by=newest_popular&page=" . $page . "&per_page=1");
         $total = json_decode($response)->total_pages;
         if($total == 0){
-            return json_encode(["error_question"]);
+            return json_encode(array("error_question"));
         }
         $oldquestion = $question;
         return getVideo($question);
