@@ -3,17 +3,24 @@ document.addEventListener("DOMContentLoaded", function (event) {
     var socket = new WebSocket("ws://"+window.location.hostname +":2346");
 
     socket.onopen = function () {
-        console.log("Соединение установлено.");
-        socket.send("imindex");
-        document.getElementById("btnclearcall").onclick = function (event) {
-            socket.send("clearCall");
-            clearCall();
-        };
+        socket.send(JSON.stringify({"command":"imindex"}));
         document.getElementById("btngetvideo").onclick = function (event) {
-            socket.send("getVideo");
-            socket.send("clearCall");
+            var question = document.getElementById('inputquestion').value;
+            socket.send(JSON.stringify({"command":"getVideo","question":question}));
+            socket.send(JSON.stringify({"command":"clearCall"}));
             clearCall();
         };
+        document.getElementById("btnstopsrv").onclick = function (event) {
+            socket.send(JSON.stringify({"command":"stopsrv"}));
+        };
+        document.getElementById("btngetvideo").classList.remove("disconnect");
+    };
+    document.getElementById("btnstartsrv").onclick = function (event) {
+        var xhr = new XMLHttpRequest();
+        console.log(window.location);
+        xhr.open('GET', window.location.href+'?start=1', true);
+        xhr.send();
+        window.location.reload();
     };
 
     socket.onclose = function (event) {
@@ -23,10 +30,10 @@ document.addEventListener("DOMContentLoaded", function (event) {
             console.log('Обрыв соединения'); // например, "убит" процесс сервера
         }
         console.log('Код: ' + event.code + ' причина: ' + event.reason);
+        document.getElementById("btngetvideo").classList.add("disconnect");
     };
 
     socket.onmessage = function (event) {
-        // console.log("Получены данные " + event.data);
         var data = JSON.parse(event.data) ;
         if (data[0] === "NewPlayer") {
             drawPlayer(data[1]);
@@ -35,9 +42,10 @@ document.addEventListener("DOMContentLoaded", function (event) {
             hostdrawPlayerCall(data[1]);
         }
         if (data['flag'] === null) {
-            // console.log(data);
              drawVideo(data['permalink']);
-             // drawVideo(data['channel']['id']);
+        }
+        if (data[0] === "close") {
+            closeClient(data[1]);
         }
     };
 

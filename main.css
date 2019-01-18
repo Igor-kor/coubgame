@@ -1,38 +1,67 @@
-html{
+html, body , #btns{
+    margin:0;
+    padding:0;
     height: 100%;
     width: 100%;
 }
-
 body{
     text-align: center;
-    height: auto;
+    background: url(https://jutsu-cdn.ru/chakranature/background_anime_jojo-bizarre-adventure.jpg) top fixed no-repeat;
+    background-size: auto;
 }
 
 .player{
     display: inline-block;
-    background-color: #0b9ddd;
+    background-color: #69cbdd;
     width: 100px;
     height: 100px;
     text-align: center;
+    margin: auto;
 }
 
-.players{
+.players div:first-child{
+    border-bottom-left-radius: 10px;
+    border-top-left-radius: 10px;
+}
 
+.players div:last-child{
+    border-bottom-right-radius: 10px;
+    border-top-right-radius: 10px;
 }
 
 .call{
-    background-color: crimson;
+    background-color: #21dc03;
 }
 
 #btncall, #btnnewplayer{
-    width: 100px;
-    height: 100px;
-
+    margin:0;
+    padding:0;
+    height: 100%;
+    width: 100%;
+    background-color: #69cbdd;
+    font-size: xx-large;
 }
+
 #btngetvideo {
     height: 100px;
     z-index: 1000;
-    display: inline-block;
+    display: block;
+    position: absolute;
+    right: 0px;
+    background-color: lightgreen;
+    font-size: xx-large;
+    border: 0;
+    border-radius: 10px;
+}
+
+#btngetvideo:hover{
+    border: 0;
+    background-color: rgba(0, 226, 0, 0.69);
+}
+
+#btngetvideo:active{
+    border: 0;
+    background-color: rgba(54, 135, 52, 0.69);
 }
 
 iframe, #video{
@@ -44,4 +73,41 @@ iframe, #video{
     width: 800px;
     height: 480px;
     z-index: 1;
+    margin: auto;
+}
+
+.newplayer > #btncall{
+    display: none;
+}
+
+.playerready > #btnnewplayer{
+    display: none;
+}
+
+.srverror > #btncall, .srverror >#btnnewplayer{
+    background-color: crimson;
+}
+
+.callplayer > #btncall{
+    background-color: #21dc03;
+}
+
+.disconnect{
+    background-color: crimson !important;
+}
+
+.srvbtn{
+    z-index: 1000;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+
+.srvbtn > input{
+    z-index: 1000;
+    display: inline-block;
+    background-color: lightgreen;
+    font-size: xx-large;
+    border: 0;
+    border-radius: 10px;
 }

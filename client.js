@@ -2,14 +2,14 @@ document.addEventListener("DOMContentLoaded", function (event) {
     var socket = new WebSocket("ws://"+window.location.hostname +":2346");
 
     socket.onopen = function () {
-        console.log("Соединение установлено.");
         document.getElementById("btnnewplayer").onclick = function (event) {
-            socket.send("NewPlayer");
+            socket.send(JSON.stringify({"command":"NewPlayer"}));
         };
 
         document.getElementById("btncall").onclick = function (event) {
-            socket.send("call");
+            socket.send(JSON.stringify({"command":"call"}));
         };
+        document.getElementById("btns").classList.remove("srverror");
     };
 
     socket.onclose = function (event) {
@@ -19,27 +19,28 @@ document.addEventListener("DOMContentLoaded", function (event) {
             console.log('Обрыв соединения'); // например, "убит" процесс сервера
         }
         console.log('Код: ' + event.code + ' причина: ' + event.reason);
+        document.getElementById("btns").classList.add("srverror");
     };
 
     socket.onmessage = function (event) {
-        console.log(event.data);
         var data = JSON.parse(event.data) ;
         if (data[0] === "NewPlayer") {
-            drawPlayer(data[1]);
-            document.getElementById("btnnewplayer").remove();
+            document.getElementById("btns").classList.add("playerready");
+            document.getElementById("btns").classList.remove("newplayer");
+            document.getElementById("btncall").innerText = data[1];
         }
         if (data[0] === "call") {
-            drawPlayerCall(data[1]);
+            document.getElementById("btns").classList.add("callplayer");
         }
         if (data[0] === "clear") {
-            clearCall();
+            document.getElementById("btns").classList.remove("callplayer");
         }
     };
 
     socket.onerror = function (error) {
         console.log("Ошибка " + error.message);
+        document.getElementById("btns").classList.add("srverror");
     };
-
 
 });
 
