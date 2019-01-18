@@ -3,11 +3,11 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     socket.onopen = function () {
         document.getElementById("btnnewplayer").onclick = function (event) {
-            socket.send("NewPlayer");
+            socket.send(JSON.stringify({"command":"NewPlayer"}));
         };
 
         document.getElementById("btncall").onclick = function (event) {
-            socket.send("call");
+            socket.send(JSON.stringify({"command":"call"}));
         };
         document.getElementById("btns").classList.remove("srverror");
     };

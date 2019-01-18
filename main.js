@@ -3,14 +3,15 @@ document.addEventListener("DOMContentLoaded", function (event) {
     var socket = new WebSocket("ws://"+window.location.hostname +":2346");
 
     socket.onopen = function () {
-        socket.send("imindex");
+        socket.send(JSON.stringify({"command":"imindex"}));
         document.getElementById("btngetvideo").onclick = function (event) {
-            socket.send("getVideo");
-            socket.send("clearCall");
+            var question = document.getElementById('inputquestion').value;
+            socket.send(JSON.stringify({"command":"getVideo","question":question}));
+            socket.send(JSON.stringify({"command":"clearCall"}));
             clearCall();
         };
         document.getElementById("btnstopsrv").onclick = function (event) {
-            socket.send("stopsrv");
+            socket.send(JSON.stringify({"command":"stopsrv"}));
         };
         document.getElementById("btngetvideo").classList.remove("disconnect");
     };

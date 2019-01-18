@@ -1,7 +1,7 @@
 <?php
-if(!empty($_GET['start'])){
+if (!empty($_GET['start'])) {
     shell_exec("php server.php start");
-}else {
+} else {
     ?>
     <!DOCTYPE html>
     <html lang="en">
@@ -15,8 +15,9 @@ if(!empty($_GET['start'])){
     <body>
     <input type="button" value="NEXT" id="btngetvideo">
     <div class="srvbtn">
-        <input type="button" value="Stop Server" id="btnstopsrv" >
-        <input type="button" value="Start Server" id="btnstartsrv" >
+        <input type="button" value="Stop Server" id="btnstopsrv">
+        <input type="button" value="Start Server" id="btnstartsrv">
+        <input type="text" value="anime" id="inputquestion" aria-label="question">
     </div>
 
     <div class="players" id="players">
