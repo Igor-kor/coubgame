@@ -1,6 +1,7 @@
 {
   "require": {
-    "workerman/workerman": "^3.5"
+    "workerman/workerman": "^3.5",
+    "kairos/phpqrcode": "^1.0"
   },
   "autoload":{
     "classmap":[
