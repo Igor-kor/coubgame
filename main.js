@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
     socket.onopen = function () {
         socket.send(JSON.stringify({"command": "imindex"}));
         document.getElementById("btngetvideo").onclick = function (event) {
+            document.getElementById("btngetvideo").disabled = true;
             var question = document.getElementById('inputquestion').value;
             socket.send(JSON.stringify({"command": "getVideo", "question": question}));
             socket.send(JSON.stringify({"command": "clearCall"}));
@@ -48,6 +49,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
                 break;
             case "ResponseVideo":
                 drawVideo(data.data.permalink);
+                document.getElementById("btngetvideo").disabled = false;
                 break;
             case "close":
                 closeClient(data.id);

@@ -55,6 +55,8 @@ $ws_worker->count = 4;
 // Emitted when new connection come
 $ws_worker->onConnect = function ($connection) {
     echo "New connection\n";
+    /* Warning: Cannot modify header information - headers already sent by (output started at /var/www/u0421736/data/www/srv0.site/coubgame/server.php:57) in /var/www/u0421736/data/www/srv0.site/coubgame/vendor/kairos/phpqrcode/qrvect.php on line 129
+    PHP Warning:  Cannot modify header information - headers already sent by (output started at /var/www/u0421736/data/www/srv0.site/coubgame/server.php:57) in /var/www/u0421736/data/www/srv0.site/coubgame/vendor/kairos/phpqrcode/qrvect.php on line 130*/
     $GLOBALS['clients'][] = new Clients($connection);
 };
 
