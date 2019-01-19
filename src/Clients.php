@@ -37,7 +37,7 @@ class Clients
     /**
      * @param mixed $sessionId
      */
-    public function setSessionId($sessionId): void
+    public function setSessionId($sessionId)
     {
         $this->sessionId = $sessionId;
     }
