@@ -24,16 +24,21 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     socket.onmessage = function (event) {
         var data = JSON.parse(event.data) ;
-        if (data[0] === "NewPlayer") {
-            document.getElementById("btns").classList.add("playerready");
-            document.getElementById("btns").classList.remove("newplayer");
-            document.getElementById("btncall").innerText = data[1];
-        }
-        if (data[0] === "call") {
-            document.getElementById("btns").classList.add("callplayer");
-        }
-        if (data[0] === "clear") {
-            document.getElementById("btns").classList.remove("callplayer");
+        switch (data['command']) {
+            case "NewPlayer":
+                document.getElementById("btns").classList.add("playerready");
+                document.getElementById("btns").classList.remove("newplayer");
+                document.getElementById("btncall").innerText = data['id'];
+                break;
+            case "call":
+                document.getElementById("btns").classList.add("callplayer");
+                break;
+            case "clear":
+                document.getElementById("btns").classList.remove("callplayer");
+                break;
+            default:
+                console.error("undefined command: "+data['command']);
+                break;
         }
     };
 

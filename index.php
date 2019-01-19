@@ -13,10 +13,13 @@ if (!empty($_GET['start'])) {
         <link rel="stylesheet" href="main.css">
     </head>
     <body>
+    <div id="qrcode" class="qrcode">
+    </div>
     <input type="button" value="NEXT" id="btngetvideo">
     <div class="srvbtn">
         <input type="button" value="Stop Server" id="btnstopsrv">
         <input type="button" value="Start Server" id="btnstartsrv">
+        <input type="button" value="Show client link" id="btnshowlink">
         <input type="text" value="anime" id="inputquestion" aria-label="question">
     </div>
 

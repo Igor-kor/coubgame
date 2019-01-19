@@ -8,7 +8,9 @@ How to start
 
 3) Create file \setting.php
 - global $HOSTNAME;
+- global $DOMAINNAME;
 - $HOSTNAME = "YOUR_DOMAIN_OR_IP:2346";
+- $DOMAINNAME = "YOUR_DOMAIN_OR_IP:PORT/PATH/";
 
 4) Go to index.php
 - touch to start server

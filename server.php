@@ -28,7 +28,7 @@ function getVideo($question = "anime")
         $response = file_get_contents("https://coub.com/api/v2/search/coubs?q=" . urlencode($question) . "&order_by=newest_popular&page=" . $page . "&per_page=1");
         $total = json_decode($response)->total_pages;
         if($total == 0){
-            return json_encode(array("error_question"));
+            return json_encode(array("command"=>"error_question"));
         }
         $oldquestion = $question;
         return getVideo($question);
@@ -37,7 +37,7 @@ function getVideo($question = "anime")
         $total = json_decode($response)->total_pages;
     }
     $page++;
-    return json_encode(json_decode($response)->coubs[0]);
+    return json_encode(array("command"=>"ResponseVideo","data"=>json_decode($response)->coubs[0]));
 }
 
 global $clients;
@@ -65,12 +65,18 @@ $ws_worker->onMessage = function ($connection, $data) {
     if ($request->command == "imindex") {
         $GLOBALS['index'] = $client;
         $client->client = false;
+        $connection->send(json_encode(
+            array(
+                "command"=>"CurrentSession",
+                "qrcode"=>QRcode::svg($GLOBALS['DOMAINNAME']."client.php?sid=".$client->generateSessionId()),
+                "link" => $GLOBALS['DOMAINNAME']."client.php?sid=".$client->generateSessionId()
+            )));
     }
     if ($request->command == "NewPlayer") {
         if (!empty($GLOBALS['index'])) {
-            $GLOBALS['index']->connection->send(json_encode(array("NewPlayer", $client->id)));
+            $GLOBALS['index']->connection->send(json_encode(array("command"=>"NewPlayer","id"=> $client->id)));
         }
-        $connection->send(json_encode(array("NewPlayer", $client->id)));
+        $connection->send(json_encode(array("command"=>"NewPlayer", "id"=>$client->id)));
     }
     if ($request->command == "getVideo") {
         if (!empty($GLOBALS['index'])) {
@@ -81,14 +87,14 @@ $ws_worker->onMessage = function ($connection, $data) {
         if ($GLOBALS['callplayer'] == 0) {
             $GLOBALS['callplayer'] = $client->id;
             if (!empty($GLOBALS['index'])) {
-                $GLOBALS['index']->connection->send(json_encode(array("call", $client->id)));
+                $GLOBALS['index']->connection->send(json_encode(array("command"=>"call", "id"=>$client->id)));
             }
-            $connection->send(json_encode(array("call", $client->id)));
+            $connection->send(json_encode(array("command"=>"call", "id"=>$client->id)));
         }
     }
     if ($request->command == "clearCall") {
         foreach ($GLOBALS['clients'] as $item) {
-            $item->connection->send(json_encode(array("clear", "null")));
+            $item->connection->send(json_encode(array("command"=>"clear")));
         }
         $GLOBALS['callplayer'] = 0;
     }
@@ -103,7 +109,7 @@ $ws_worker->onMessage = function ($connection, $data) {
 $ws_worker->onClose = function ($connection) {
     $client = Clients::getByConnection($connection, $GLOBALS['clients']);
     if (!empty($GLOBALS['index'])) {
-        $GLOBALS['index']->connection->send(json_encode(array("close", $client->id)));
+        $GLOBALS['index']->connection->send(json_encode(array("command"=>"close", "id"=>$client->id)));
     }
     echo "Connection closed\n";
 };
