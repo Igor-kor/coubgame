@@ -1,4 +1,4 @@
-#How to start
+# How to start
 
 1) Install composer
 - php install
@@ -17,7 +17,7 @@
 
 READY!
 
-#Optional 
+# Optional 
 1) start/stop server from command line
 
 for windows 
@@ -29,6 +29,6 @@ for linux
 - php sever.php stop | ctrl+c
 - Or use interface on index.php
 
-#Screenshots
+# Screenshots
 
 ![screenshot](https://pp.userapi.com/c845323/v845323923/184d9d/YN-Lyufr9cc.jpg)
