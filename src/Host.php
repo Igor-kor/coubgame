@@ -89,7 +89,18 @@ class Host
      */
     function deleteClient($client)
     {
-        if (Clients::getByConnection($client, $this->clients) != null) {
+        if (Clients::getByConnection($client->getConnection(), $this->clients) != null) {
+            unset($client, $this->clients);
+        }
+    }
+
+    /**
+     * @param $connection ConnectionInterface
+     */
+    function deleteClientFromConnection($connection)
+    {
+        $client = Clients::getByConnection($connection, $this->clients);
+        if ($client != null) {
             unset($client, $this->clients);
         }
     }

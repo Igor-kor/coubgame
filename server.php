@@ -55,7 +55,6 @@ $ws_worker->onMessage = function ($connection, $data) {
                 )));
             break;
         case "NewPlayer":
-            var_dump($GLOBALS['hosts']);
             if (!isset($GLOBALS['hosts'][$request->sessionId])) {
                 $connection->close(json_encode(array("command" =>'session id closed')));
             } else {
@@ -116,6 +115,7 @@ $ws_worker->onClose = function ($connection) {
                 unset($GLOBALS['hosts'][$session]);
             } else {
                 $host->getHostConnection()->send(json_encode(array("command" => "close", "id" => $host->findClients($connection)->id)));
+                $host->deleteClientFromConnection($connection);
             }
 
         }
