@@ -54,12 +54,17 @@ body{
     border-radius: 10px;
 }
 
-#btngetvideo:hover{
+#btngetvideo:disabled, #btngetvideo:disabled:hover {
+    background-color: #c82a3a;
+}
+
+
+#btngetvideo:hover, .srvbtn > input:hover{
     border: 0;
     background-color: rgba(0, 226, 0, 0.69);
 }
 
-#btngetvideo:active{
+#btngetvideo:active, .srvbtn > input:active{
     border: 0;
     background-color: rgba(54, 135, 52, 0.69);
 }
@@ -74,6 +79,8 @@ iframe, #video{
     height: 480px;
     z-index: 1;
     margin: auto;
+    background-color: rgba(27, 28, 27, 0.92);
+    padding: 10px 10px 10px 10px;
 }
 
 .newplayer > #btncall{
@@ -110,4 +117,18 @@ iframe, #video{
     font-size: xx-large;
     border: 0;
     border-radius: 10px;
+}
+
+.qrcode{
+    width: 100%;
+    height: 100%;
+    background-color: #232323;
+    opacity: 0.9;
+    position: absolute;
+}
+
+.qrcode>a{
+    display: block;
+    color: white;
+    font-size: xx-large;
 }

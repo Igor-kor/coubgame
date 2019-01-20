@@ -1,11 +1,11 @@
 document.addEventListener("DOMContentLoaded", function (event) {
     var socket = new WebSocket("ws://"+window.location.hostname +":2346");
+    var url = new URL(location.href);
 
     socket.onopen = function () {
         document.getElementById("btnnewplayer").onclick = function (event) {
-            socket.send(JSON.stringify({"command":"NewPlayer"}));
+            socket.send(JSON.stringify({"command":"NewPlayer","sessionId":url.searchParams.get("sid")}));
         };
-
         document.getElementById("btncall").onclick = function (event) {
             socket.send(JSON.stringify({"command":"call"}));
         };
@@ -24,16 +24,21 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     socket.onmessage = function (event) {
         var data = JSON.parse(event.data) ;
-        if (data[0] === "NewPlayer") {
-            document.getElementById("btns").classList.add("playerready");
-            document.getElementById("btns").classList.remove("newplayer");
-            document.getElementById("btncall").innerText = data[1];
-        }
-        if (data[0] === "call") {
-            document.getElementById("btns").classList.add("callplayer");
-        }
-        if (data[0] === "clear") {
-            document.getElementById("btns").classList.remove("callplayer");
+        switch (data['command']) {
+            case "NewPlayer":
+                document.getElementById("btns").classList.add("playerready");
+                document.getElementById("btns").classList.remove("newplayer");
+                document.getElementById("btncall").innerText = data['id'];
+                break;
+            case "call":
+                document.getElementById("btns").classList.add("callplayer");
+                break;
+            case "clear":
+                document.getElementById("btns").classList.remove("callplayer");
+                break;
+            default:
+                console.error("undefined command: "+data['command']);
+                break;
         }
     };
 
@@ -43,4 +48,3 @@ document.addEventListener("DOMContentLoaded", function (event) {
     };
 
 });
-
