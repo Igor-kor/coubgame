@@ -55,7 +55,7 @@ $ws_worker->onMessage = function ($connection, $data) {
                 )));
             break;
         case "NewPlayer":
-            if (!array_key_exists($request->sessionId, $GLOBALS['hosts'])) {
+            if (!isset($GLOBALS['hosts'][$request->sessionId])) {
                 $connection->close();
             } else {
                 $client = new Clients($connection);
@@ -71,7 +71,7 @@ $ws_worker->onMessage = function ($connection, $data) {
             }
             break;
         case "call":
-            if (!array_key_exists($request->sessionId, $GLOBALS['hosts'])) {
+            if (!isset($GLOBALS['hosts'][$session])) {
                 $connection->close();
             } else {
                 $client = $host->getClientFromConnection($connection);
