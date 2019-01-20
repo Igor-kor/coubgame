@@ -29,8 +29,6 @@ $ws_worker->count = 1;
 // Emitted when new connection come
 $ws_worker->onConnect = function ($connection) {
     echo "New connection\n";
-    /* Warning: Cannot modify header information - headers already sent by (output started at /var/www/u0421736/data/www/srv0.site/coubgame/server.php:57) in /var/www/u0421736/data/www/srv0.site/coubgame/vendor/kairos/phpqrcode/qrvect.php on line 129
-    PHP Warning:  Cannot modify header information - headers already sent by (output started at /var/www/u0421736/data/www/srv0.site/coubgame/server.php:57) in /var/www/u0421736/data/www/srv0.site/coubgame/vendor/kairos/phpqrcode/qrvect.php on line 130*/
 };
 
 // Emitted when data received
@@ -46,10 +44,11 @@ $ws_worker->onMessage = function ($connection, $data) {
             $client = new Clients($connection);
             $client->generateSessionId();
             $GLOBALS['hosts'][$client->getSessionId()] = new Host($client);
+            QRcode::png($GLOBALS['DOMAINNAME'] . "client.php?sid=" . $client->getSessionId(),"qrcodeimage/". $client->getSessionId().".png");
             $connection->send(json_encode(
                 array(
                     "command" => "CurrentSession",
-                    "qrcode" => QRcode::svg($GLOBALS['DOMAINNAME'] . "client.php?sid=" . $client->getSessionId()),
+                    "qrcode" => "<img src = '".$GLOBALS['DOMAINNAME']."qrcodeimage/". $client->getSessionId().".png'></img>",
                     "link" => $GLOBALS['DOMAINNAME'] . "client.php?sid=" . $client->getSessionId()
                 )));
             break;
@@ -106,17 +105,22 @@ $ws_worker->onClose = function ($connection) {
          * @var $host Host
          */
         $host = $GLOBALS['hosts'][$session];
+        var_dump("closed");
         if (!is_null($host)) {
             if ($host->isHost($connection)) {
+                var_dump("host closed");
                 foreach ($host->getClients() as $key => $item) {
-                    $item->getConnection()->close();
+                    $item->getConnection()->close(json_encode(array("command" =>'session id closed')));
                 }
+                //todo dont work :(
                 unset($GLOBALS['hosts'][$session]);
             } else {
+                var_dump("client closed");
                 $host->getHostConnection()->send(json_encode(array("command" => "close", "id" => $host->findClients($connection)->id)));
                 $host->deleteClientFromConnection($connection);
             }
         }
+//        var_dump($host);
     }
     echo "Connection closed\n";
 };
