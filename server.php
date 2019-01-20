@@ -55,8 +55,9 @@ $ws_worker->onMessage = function ($connection, $data) {
                 )));
             break;
         case "NewPlayer":
+            var_dump($GLOBALS['hosts']);
             if (!isset($GLOBALS['hosts'][$request->sessionId])) {
-                $connection->close('session id closed');
+                $connection->close(json_encode(array("command" =>'session id closed')));
             } else {
                 $client = new Clients($connection);
                 $client->setSessionId($request->sessionId);
@@ -72,7 +73,7 @@ $ws_worker->onMessage = function ($connection, $data) {
             break;
         case "call":
             if (!isset($GLOBALS['hosts'][$session])) {
-                $connection->close('session id closed');
+                $connection->close(json_encode(array("command" =>'session id closed')));
             } else {
                 $client = $host->getClientFromConnection($connection);
                 if ($GLOBALS['hosts'][$session]->setCallPlayer($client->id)) {
