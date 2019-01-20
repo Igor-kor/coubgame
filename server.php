@@ -39,7 +39,7 @@ $ws_worker->onMessage = function ($connection, $data) {
     $request = json_decode($data);
     $session = Host::findSessionFromConnection($connection, $GLOBALS['hosts']);
     $host = Host::findHostFromConnection($connection, $GLOBALS['hosts']);
-    if($GLOBALS['DEBUG'] == true){
+    if ($GLOBALS['DEBUG'] == true) {
         var_dump($request);
     }
     switch ($request->command) {
@@ -55,14 +55,15 @@ $ws_worker->onMessage = function ($connection, $data) {
                 )));
             break;
         case "NewPlayer":
-            if(!array_key_exists($request->sessionId,$GLOBALS['hosts'])){
+            if (!array_key_exists($request->sessionId, $GLOBALS['hosts'])) {
                 $connection->close();
+            } else {
+                $client = new Clients($connection);
+                $client->setSessionId($request->sessionId);
+                $GLOBALS['hosts'][$client->getSessionId()]->addClient($client);
+                $GLOBALS['hosts'][$client->getSessionId()]->getHostConnection()->send(json_encode(array("command" => "NewPlayer", "id" => $client->id)));
+                $connection->send(json_encode(array("command" => "NewPlayer", "id" => $client->id)));
             }
-            $client = new Clients($connection);
-            $client->setSessionId($request->sessionId);
-            $GLOBALS['hosts'][$client->getSessionId()]->addClient($client);
-            $GLOBALS['hosts'][$client->getSessionId()]->getHostConnection()->send(json_encode(array("command" => "NewPlayer", "id" => $client->id)));
-            $connection->send(json_encode(array("command" => "NewPlayer", "id" => $client->id)));
             break;
         case "getVideo":
             if ($GLOBALS['hosts'][$session]->isHost($connection)) {
@@ -103,12 +104,12 @@ $ws_worker->onClose = function ($connection) {
          */
         $host = $GLOBALS['hosts'][$session];
         if (!is_null($host)) {
-            if($host->isHost($connection)){
-                foreach ($host->getClients() as $key => $item){
+            if ($host->isHost($connection)) {
+                foreach ($host->getClients() as $key => $item) {
                     $item->getConnection()->close();
                 }
                 unset($GLOBALS['hosts'][$session]);
-            }else{
+            } else {
                 $host->getHostConnection()->send(json_encode(array("command" => "close", "id" => $host->findClients($connection)->id)));
             }
 
