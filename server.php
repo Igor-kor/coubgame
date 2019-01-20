@@ -24,8 +24,7 @@ $hosts = array();
 // Create a Websocket server
 $ws_worker = new Worker("websocket://" . $HOSTNAME);
 
-// 4 processes
-$ws_worker->count = 4;
+$ws_worker->count = 1;
 
 // Emitted when new connection come
 $ws_worker->onConnect = function ($connection) {
@@ -117,7 +116,6 @@ $ws_worker->onClose = function ($connection) {
                 $host->getHostConnection()->send(json_encode(array("command" => "close", "id" => $host->findClients($connection)->id)));
                 $host->deleteClientFromConnection($connection);
             }
-
         }
     }
     echo "Connection closed\n";
