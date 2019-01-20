@@ -209,7 +209,7 @@ class Host
      */
     function isHost($connection)
     {
-        if (!is_null($connection) && $this->connectionHost->getConnection() == $connection) {
+        if (!is_null($connection) && $this->connectionHost->id == Clients::getByConnection($connection,$this->clients)->id) {
             return true;
         }
         return false;

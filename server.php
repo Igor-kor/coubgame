@@ -105,17 +105,14 @@ $ws_worker->onClose = function ($connection) {
          * @var $host Host
          */
         $host = $GLOBALS['hosts'][$session];
-        var_dump("closed");
         if (!is_null($host)) {
             if ($host->isHost($connection)) {
-                var_dump("host closed");
                 foreach ($host->getClients() as $key => $item) {
                     $item->getConnection()->close(json_encode(array("command" =>'session id closed')));
                 }
                 //todo dont work :(
                 unset($GLOBALS['hosts'][$session]);
             } else {
-                var_dump("client closed");
                 $host->getHostConnection()->send(json_encode(array("command" => "close", "id" => $host->findClients($connection)->id)));
                 $host->deleteClientFromConnection($connection);
             }
