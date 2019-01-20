@@ -6,7 +6,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
         document.getElementById("btnnewplayer").onclick = function (event) {
             socket.send(JSON.stringify({"command":"NewPlayer","sessionId":url.searchParams.get("sid")}));
         };
-
         document.getElementById("btncall").onclick = function (event) {
             socket.send(JSON.stringify({"command":"call"}));
         };
@@ -49,4 +48,3 @@ document.addEventListener("DOMContentLoaded", function (event) {
     };
 
 });
-

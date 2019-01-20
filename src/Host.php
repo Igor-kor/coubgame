@@ -40,56 +40,67 @@ class Host
     function __construct($connectionHost)
     {
         $this->connectionHost = $connectionHost;
-        if($connectionHost->getSessionId() == 0){
+        if ($connectionHost->getSessionId() == 0) {
             $connectionHost->generateSessionId();
         }
         $this->sessionId = $connectionHost->getSessionId();
         $this->clients = array();
         $this->callPlayer = 0;
+        $this->addClient($connectionHost);
     }
 
     /**
      * @return Clients
      */
-    function getHost(){
+    function getHost()
+    {
         return $this->connectionHost;
     }
 
-    function getHostConnection(){
+    function getHostConnection()
+    {
         return $this->connectionHost->getConnection();
     }
 
     /**
      * @param $client Clients
      */
-    function addClient($client){
-        if($this->findClients($client) == null){
+    function addClient($client)
+    {
+        if ($this->findClients($client->getConnection()) == null) {
             $this->clients[] = $client;
         }
     }
 
     /**
-     * @param $client Clients
+     * @param $connection ConnectionInterface
      * @return mixed|null
      */
-    function findClients($client){
-        return Clients::getByConnection($client,$this->clients);
+    function findClients($connection)
+    {
+        if (empty($this->clients)) {
+            return null;
+        }
+        return Clients::getByConnection($connection, $this->clients);
     }
 
     /**
      * @param $client Clients
      */
-    function deleteClient($client){
-        if(Clients::getByConnection($client,$this->clients) != null){
-            unset($client,$this->clients);
+    function deleteClient($client)
+    {
+        if (Clients::getByConnection($client, $this->clients) != null) {
+            unset($client, $this->clients);
         }
     }
 
     /**
-     * @param $connectionHost ConnectionInterface
+     * @param $connectionHost Clients
      */
-    function resetHost($connectionHost){
+    function resetHost($connectionHost)
+    {
         $this->connectionHost = $connectionHost;
+        $this->addClient($connectionHost);
     }
 
     /**
@@ -97,9 +108,10 @@ class Host
      * @param $arrayServer Host[]
      * @return null
      */
-    static function findSession($sessionId, $arrayServer){
-        foreach ($arrayServer as $key => $item){
-            if($item->getSessionId() == $sessionId){
+    static function findSession($sessionId, $arrayServer)
+    {
+        foreach ($arrayServer as $key => $item) {
+            if ($item->getSessionId() == $sessionId) {
                 return $arrayServer[$key];
             }
         }
@@ -111,11 +123,28 @@ class Host
      * @param $arrayServer Host[]
      * @return mixed
      */
-    static function findSessionFromConnection($connection, $arrayServer){
-        foreach ($arrayServer as $key => $item){
+    static function findSessionFromConnection($connection, $arrayServer)
+    {
+        foreach ($arrayServer as $key => $item) {
             $client = $item->findClients($connection);
-            if(!is_null($client)){
+            if (!is_null($client)) {
                 return $client->getSessionId();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @param $connection
+     * @param $arrayServer Host[]
+     * @return mixed
+     */
+    static function findHostFromConnection($connection, $arrayServer)
+    {
+        foreach ($arrayServer as $key => $item) {
+            $client = $item->findClients($connection);
+            if (!is_null($client)) {
+                return $arrayServer[$key];
             }
         }
         return null;
@@ -124,7 +153,8 @@ class Host
     /**
      * @return int|mixed
      */
-    function getSessionId(){
+    function getSessionId()
+    {
         return $this->sessionId;
     }
 
@@ -132,8 +162,9 @@ class Host
      * @param $idClient integer
      * @return bool
      */
-    function setCallPlayer($idClient){
-        if($this->callPlayer == 0 ){
+    function setCallPlayer($idClient)
+    {
+        if ($this->callPlayer == 0) {
             $this->callPlayer = $idClient;
             return true;
         }
@@ -143,15 +174,34 @@ class Host
     /**
      *
      */
-    function resetCallPlayer(){
+    function resetCallPlayer()
+    {
         $this->callPlayer = 0;
     }
 
     /**
      * @return array|Clients[]
      */
-    function getClients(){
+    function getClients()
+    {
         return $this->clients;
+    }
+
+    function getClientFromConnection($connection)
+    {
+        return Clients::getByConnection($connection, $this->clients);
+    }
+
+    /**
+     * @param $connection ConnectionInterface
+     * @return bool
+     */
+    function isHost($connection)
+    {
+        if (!is_null($connection) && $this->connectionHost->getConnection() == $connection) {
+            return true;
+        }
+        return false;
     }
 
 }

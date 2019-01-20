@@ -7,6 +7,8 @@
  */
 namespace Clients;
 
+use Workerman\Connection\ConnectionInterface;
+
 class Clients
 {
     var $id;
@@ -71,6 +73,9 @@ class Clients
         return (string) $this->id;
     }
 
+    /**
+     * @return ConnectionInterface
+     */
     function getConnection(){
         return $this->connection;
     }
