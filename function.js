@@ -1,7 +1,7 @@
 function drawPlayer(IdPlayer) {
     var players = document.getElementById('players');
     players.innerHTML = players.innerHTML + "<div class = 'player' id = 'player-" + IdPlayer + "'>" +
-        "<h1>" + IdPlayer + "</h1></div>";
+        "<p>" + IdPlayer + "</p></div>";
 }
 
 function drawPlayerCall(IdPlayer) {

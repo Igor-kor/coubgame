@@ -13,10 +13,15 @@ body{
 .player{
     display: inline-block;
     background-color: #69cbdd;
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 40px;
     text-align: center;
     margin: auto;
+}
+
+.player > p{
+    font-size: xx-large;
+    margin: 0;
 }
 
 .players div:first-child{
