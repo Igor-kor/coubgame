@@ -107,6 +107,7 @@ $ws_worker->onClose = function ($connection) {
                 foreach ($host->getClients() as $key => $item){
                     $item->getConnection()->close();
                 }
+                unset($GLOBALS['hosts'][$session]);
             }else{
                 $host->getHostConnection()->send(json_encode(array("command" => "close", "id" => $host->findClients($connection)->id)));
             }
