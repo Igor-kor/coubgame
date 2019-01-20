@@ -44,17 +44,17 @@ $ws_worker->onMessage = function ($connection, $data) {
             $client = new Clients($connection);
             $client->generateSessionId();
             $GLOBALS['hosts'][$client->getSessionId()] = new Host($client);
-            QRcode::png($GLOBALS['DOMAINNAME'] . "client.php?sid=" . $client->getSessionId(),"qrcodeimage/". $client->getSessionId().".png");
+            QRcode::png($GLOBALS['DOMAINNAME'] . "client.php?sid=" . $client->getSessionId(), "qrcodeimage/" . $client->getSessionId() . ".png");
             $connection->send(json_encode(
                 array(
                     "command" => "CurrentSession",
-                    "qrcode" => "<img src = '".$GLOBALS['DOMAINNAME']."qrcodeimage/". $client->getSessionId().".png'></img>",
+                    "qrcode" => "<img src = '" . $GLOBALS['DOMAINNAME'] . "qrcodeimage/" . $client->getSessionId() . ".png'></img>",
                     "link" => $GLOBALS['DOMAINNAME'] . "client.php?sid=" . $client->getSessionId()
                 )));
             break;
         case "NewPlayer":
             if (!isset($GLOBALS['hosts'][$request->sessionId])) {
-                $connection->close(json_encode(array("command" =>'session id closed')));
+                $connection->close(json_encode(array("command" => 'session id closed')));
             } else {
                 $client = new Clients($connection);
                 $client->setSessionId($request->sessionId);
@@ -70,7 +70,7 @@ $ws_worker->onMessage = function ($connection, $data) {
             break;
         case "call":
             if (!isset($GLOBALS['hosts'][$session])) {
-                $connection->close(json_encode(array("command" =>'session id closed')));
+                $connection->close(json_encode(array("command" => 'session id closed')));
             } else {
                 $client = $host->getClientFromConnection($connection);
                 if ($GLOBALS['hosts'][$session]->setCallPlayer($client->id)) {
@@ -105,19 +105,15 @@ $ws_worker->onClose = function ($connection) {
          * @var $host Host
          */
         $host = $GLOBALS['hosts'][$session];
-        if (!is_null($host)) {
-            if ($host->isHost($connection)) {
-                foreach ($host->getClients() as $key => $item) {
-                    $item->getConnection()->close(json_encode(array("command" =>'session id closed')));
-                }
-                //todo dont work :(
-                unset($GLOBALS['hosts'][$session]);
-            } else {
-                $host->getHostConnection()->send(json_encode(array("command" => "close", "id" => $host->findClients($connection)->id)));
-                $host->deleteClientFromConnection($connection);
+        if ($host->isHost($connection)) {
+            foreach ($host->getClients() as $key => $item) {
+                $item->getConnection()->close(json_encode(array("command" => 'session id closed')));
             }
+            unset($GLOBALS['hosts'][$session]);
+        } else {
+            $host->getHostConnection()->send(json_encode(array("command" => "close", "id" => $host->findClients($connection)->id)));
+            $host->deleteClientFromConnection($connection);
         }
-//        var_dump($host);
     }
     echo "Connection closed\n";
 };

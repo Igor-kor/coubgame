@@ -62,11 +62,23 @@ class Clients
             return null;
         }
         foreach ($array as $key => $item){
-            if($item->connection == $connection){
+            if($item->connection->id == $connection->id){
                 return $array[$key];
             }
         }
        return null;
+    }
+
+    static function getByConnectionId($connection,array $array){
+        if(empty($array)){
+            return null;
+        }
+        foreach ($array as $key => $item){
+            if($item->connection->id == $connection->id){
+                return $key;
+            }
+        }
+        return null;
     }
 
     function getIdString(){
