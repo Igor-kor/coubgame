@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     socket.onopen = function () {
         document.getElementById("btnnewplayer").onclick = function (event) {
-            socket.send(JSON.stringify({"command":"NewPlayer","sessionId":getAllUrlParams("sid")}));
+            socket.send(JSON.stringify({"command":"NewPlayer","sessionId":getAllUrlParams().sid}));
         };
         document.getElementById("btncall").onclick = function (event) {
             socket.send(JSON.stringify({"command":"call"}));
