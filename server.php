@@ -52,6 +52,9 @@ $ws_worker->onMessage = function ($connection, $data) {
                 )));
             break;
         case "NewPlayer":
+            if(array_key_exists($request->sessionId,$GLOBALS['hosts'])){
+                $connection->close();
+            }
             $client = new Clients($connection);
             $client->setSessionId($request->sessionId);
             $GLOBALS['hosts'][$client->getSessionId()]->addClient($client);
