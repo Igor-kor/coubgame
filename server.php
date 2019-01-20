@@ -39,6 +39,9 @@ $ws_worker->onMessage = function ($connection, $data) {
     $request = json_decode($data);
     $session = Host::findSessionFromConnection($connection, $GLOBALS['hosts']);
     $host = Host::findHostFromConnection($connection, $GLOBALS['hosts']);
+    if($GLOBALS['debug'] == true){
+        var_dump($request);
+    }
     switch ($request->command) {
         case "imindex":
             $client = new Clients($connection);

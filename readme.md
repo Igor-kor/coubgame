@@ -14,8 +14,10 @@ php composer.phar install
 ```php
 global $HOSTNAME;
 global $DOMAINNAME;
+global $DEBUG;
 $HOSTNAME = "YOUR_DOMAIN_OR_IP:2346";
 $DOMAINNAME = "http://YOUR_DOMAIN_OR_IP:PORT/PATH/";
+$DEBUG = false;
 ```
 
 4) Go to **index.php**
