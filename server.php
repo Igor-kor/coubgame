@@ -71,10 +71,14 @@ $ws_worker->onMessage = function ($connection, $data) {
             }
             break;
         case "call":
-            $client = $host->getClientFromConnection($connection);
-            if ($GLOBALS['hosts'][$session]->setCallPlayer($client->id)) {
-                $GLOBALS['hosts'][$session]->getHostConnection()->send(json_encode(array("command" => "call", "id" => $client->id)));
-                $connection->send(json_encode(array("command" => "call", "id" => $client->id)));
+            if (!array_key_exists($request->sessionId, $GLOBALS['hosts'])) {
+                $connection->close();
+            } else {
+                $client = $host->getClientFromConnection($connection);
+                if ($GLOBALS['hosts'][$session]->setCallPlayer($client->id)) {
+                    $GLOBALS['hosts'][$session]->getHostConnection()->send(json_encode(array("command" => "call", "id" => $client->id)));
+                    $connection->send(json_encode(array("command" => "call", "id" => $client->id)));
+                }
             }
             break;
         case "clearCall":
