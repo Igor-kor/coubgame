@@ -30,6 +30,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
     };
 
     socket.onmessage = function (event) {
+        console.log(event.data);
         var data = JSON.parse(event.data) ;
         switch (data['command']) {
             case "NewPlayer":
