@@ -11,6 +11,7 @@ require_once __DIR__ . '/settings.php';
 
 use Workerman\Worker;
 use Clients\Clients;
+use Host\Host;
 
 /**
  * @param string $question
@@ -27,8 +28,8 @@ function getVideo($question = "anime")
     if ($total == 0 || $oldquestion != $question) {
         $response = file_get_contents("https://coub.com/api/v2/search/coubs?q=" . urlencode($question) . "&order_by=newest_popular&page=" . $page . "&per_page=1");
         $total = json_decode($response)->total_pages;
-        if($total == 0){
-            return json_encode(array("command"=>"error_question"));
+        if ($total == 0) {
+            return json_encode(array("command" => "error_question"));
         }
         $oldquestion = $question;
         return getVideo($question);
@@ -37,11 +38,16 @@ function getVideo($question = "anime")
         $total = json_decode($response)->total_pages;
     }
     $page++;
-    return json_encode(array("command"=>"ResponseVideo","data"=>json_decode($response)->coubs[0]));
+    return json_encode(array("command" => "ResponseVideo", "data" => json_decode($response)->coubs[0]));
 }
 
 global $clients;
 $clients = array();
+/**
+ * var Host[]
+ */
+global $hosts;
+$hosts = array();
 global $index;
 $index = null;
 global $callplayer;
@@ -63,55 +69,64 @@ $ws_worker->onConnect = function ($connection) {
 // Emitted when data received
 $ws_worker->onMessage = function ($connection, $data) {
     $request = json_decode($data);
+    //todo delete $GLOBALS['clients']
     $client = Clients::getByConnection($connection, $GLOBALS['clients']);
-    if ($request->command == "imindex") {
-        $GLOBALS['index'] = $client;
-        $client->client = false;
-        $connection->send(json_encode(
-            array(
-                "command"=>"CurrentSession",
-                "qrcode"=>QRcode::svg($GLOBALS['DOMAINNAME']."client.php?sid=".$client->generateSessionId()),
-                "link" => $GLOBALS['DOMAINNAME']."client.php?sid=".$client->generateSessionId()
-            )));
-    }
-    if ($request->command == "NewPlayer") {
-        if (!empty($GLOBALS['index'])) {
-            $GLOBALS['index']->connection->send(json_encode(array("command"=>"NewPlayer","id"=> $client->id)));
-        }
-        $connection->send(json_encode(array("command"=>"NewPlayer", "id"=>$client->id)));
-    }
-    if ($request->command == "getVideo") {
-        if (!empty($GLOBALS['index'])) {
-            $GLOBALS['index']->connection->send(getVideo($request->question));
-        }
-    }
-    if ($request->command == "call") {
-        if ($GLOBALS['callplayer'] == 0) {
-            $GLOBALS['callplayer'] = $client->id;
-            if (!empty($GLOBALS['index'])) {
-                $GLOBALS['index']->connection->send(json_encode(array("command"=>"call", "id"=>$client->id)));
+    switch ($request->command) {
+        case "imindex":
+            $client->generateSessionId();
+            $GLOBALS['hosts'][$client->getSessionId()] = new Host($client);
+            $connection->send(json_encode(
+                array(
+                    "command" => "CurrentSession",
+                    "qrcode" => QRcode::svg($GLOBALS['DOMAINNAME'] . "client.php?sid=" . $client->getSessionId()),
+                    "link" => $GLOBALS['DOMAINNAME'] . "client.php?sid=" . $client->getSessionId()
+                )));
+            break;
+        case "NewPlayer":
+            $client->setSessionId($request->sessionId);
+            $GLOBALS['hosts'][$client->getSessionId()]->addClient($client);
+            $GLOBALS['hosts'][$client->getSessionId()]->getHostConnection()->send(json_encode(array("command" => "NewPlayer", "id" => $client->id)));
+            $connection->send(json_encode(array("command" => "NewPlayer", "id" => $client->id)));
+            break;
+        case "getVideo":
+            //todo work on clients
+            $connection->send(getVideo($request->question));
+            break;
+        case "call":
+            if ($GLOBALS['hosts'][$client->getSessionId()]->setCallPlayer($client->id)) {
+                $GLOBALS['hosts'][$client->getSessionId()]->getHostConnection()->send(json_encode(array("command" => "call", "id" => $client->id)));
+                $connection->send(json_encode(array("command" => "call", "id" => $client->id)));
             }
-            $connection->send(json_encode(array("command"=>"call", "id"=>$client->id)));
-        }
-    }
-    if ($request->command == "clearCall") {
-        foreach ($GLOBALS['clients'] as $item) {
-            $item->connection->send(json_encode(array("command"=>"clear")));
-        }
-        $GLOBALS['callplayer'] = 0;
+            break;
+        case "clearCall":
+            // todo  Invalid argument supplied for foreach()
+            //todo dont work
+            foreach ($GLOBALS['hosts'][$client->getSessionId()]->getClients() as $item) {
+                $item->getConnection()->send(json_encode(array("command" => "clear")));
+            }
+            $GLOBALS['hosts'][$client->getSessionId()]->resetCallPlayer();
+            break;
+        case "stopsrv":
+            shell_exec("php server.php stop");
+            die(0);
+            break;
+        default:
+            echo "undefined command:";
+            var_dump($request);
+            break;
     }
 
-    if ($request->command == "stopsrv") {
-        shell_exec("php server.php stop");
-        die(0);
-    }
 };
 
 // Emitted when connection closed
 $ws_worker->onClose = function ($connection) {
-    $client = Clients::getByConnection($connection, $GLOBALS['clients']);
-    if (!empty($GLOBALS['index'])) {
-        $GLOBALS['index']->connection->send(json_encode(array("command"=>"close", "id"=>$client->id)));
+    // todo dont work
+    $session = Host::findSessionFromConnection($connection, $GLOBALS['hosts']);
+    if (!is_null($session)) {
+        $host = $GLOBALS['hosts'][$session];
+        if (!is_null($host)) {
+            $host->getHostConnection()->send(json_encode(array("command" => "close", "id" => $host->findClients($connection)->id)));
+        }
     }
     echo "Connection closed\n";
 };

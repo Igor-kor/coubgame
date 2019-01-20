@@ -1,9 +1,10 @@
 document.addEventListener("DOMContentLoaded", function (event) {
     var socket = new WebSocket("ws://"+window.location.hostname +":2346");
+    var url = new URL(location.href);
 
     socket.onopen = function () {
         document.getElementById("btnnewplayer").onclick = function (event) {
-            socket.send(JSON.stringify({"command":"NewPlayer"}));
+            socket.send(JSON.stringify({"command":"NewPlayer","sessionId":url.searchParams.get("sid")}));
         };
 
         document.getElementById("btncall").onclick = function (event) {

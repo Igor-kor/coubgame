@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", function (event) {
+    document.getElementById('qrcode').hidden = true;
 
     var socket = new WebSocket("ws://" + window.location.hostname + ":2346");
 
